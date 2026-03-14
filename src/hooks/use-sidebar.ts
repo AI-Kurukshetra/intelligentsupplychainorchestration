@@ -1,22 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 const STORAGE_KEY = "sidebar-collapsed";
 
 export function useSidebar() {
-  const [collapsed, setCollapsedState] = useState(false);
-
-  useEffect(() => {
+  const [collapsed, setCollapsedState] = useState<boolean>(() => {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored !== null) {
-        setCollapsedState(stored === "true");
-      }
+      const stored = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
+      return stored === "true";
     } catch {
-      // ignore
+      return false;
     }
-  }, []);
+  });
 
   const setCollapsed = useCallback((value: boolean) => {
     setCollapsedState(value);

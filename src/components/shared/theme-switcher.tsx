@@ -14,8 +14,6 @@ import { THEMES, type ThemeId } from "@/components/shared/theme-provider";
 const THEME_LABELS: Record<ThemeId, string> = {
   light: "Light",
   dark: "Dark",
-  claude: "Claude",
-  vercel: "Vercel",
 };
 
 export function ThemeSwitcher() {

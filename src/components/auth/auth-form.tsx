@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
@@ -32,14 +31,12 @@ import {
 
 type AuthFormProps = {
   mode: "sign-in" | "sign-up";
-  redirectTo?: string;
   error?: string;
   message?: string;
 };
 
 export function AuthForm({
   mode,
-  redirectTo: _redirectTo,
   error: initialError,
   message,
 }: AuthFormProps) {
@@ -58,7 +55,7 @@ export function AuthForm({
     resolver: zodResolver(isSignIn ? signInSchema : signUpSchema),
     defaultValues: isSignIn
       ? { email: "", password: "" }
-      : { email: "", password: "", fullName: "" },
+      : { email: "", password: "", displayName: "" },
   });
 
   const onSubmit = async (values: SignInValues | SignUpValues) => {
@@ -68,8 +65,8 @@ export function AuthForm({
         const { email, password } = values as SignInValues;
         await signIn(email, password);
       } else {
-        const { email, password, fullName } = values as SignUpValues;
-        await signUp(email, password, fullName ?? null);
+        const { email, password, displayName } = values as SignUpValues;
+        await signUp(email, password, displayName ?? null);
         toast.success("Check your email to confirm your account.");
       }
     } catch (error) {
@@ -100,14 +97,14 @@ export function AuthForm({
             {mode === "sign-up" && (
               <FormField
                 control={form.control}
-                name={"fullName" as keyof SignUpValues}
+                name={"displayName" as keyof SignUpValues}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Full name (optional)</FormLabel>
+                    <FormLabel>Display name (optional)</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        id="fullName"
+                        id="displayName"
                         type="text"
                         placeholder="Jane Doe"
                         className="h-11 rounded-lg"

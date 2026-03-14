@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getSupabaseEnv } from "./env";
 
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
+  const supabaseResponse = NextResponse.next({
     request,
   });
 
@@ -34,10 +34,16 @@ export async function updateSession(request: NextRequest) {
     pathname === "/auth/sign-in" ||
     pathname === "/auth/sign-up" ||
     pathname.startsWith("/auth/");
+  const isUpdatePasswordRoute = pathname === "/auth/update-password";
+  const isCallbackRoute = pathname === "/auth/callback";
   const isProtectedRoute =
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/admin") ||
-    pathname.startsWith("/profile");
+    pathname.startsWith("/profile") ||
+    pathname.startsWith("/planning") ||
+    pathname.startsWith("/inventory") ||
+    pathname.startsWith("/exceptions") ||
+    pathname.startsWith("/supplier-portal");
 
   if (isProtectedRoute && !user) {
     const url = request.nextUrl.clone();
@@ -47,7 +53,13 @@ export async function updateSession(request: NextRequest) {
   }
 
   const isEmailVerifiedPage = pathname === "/auth/email-verified";
-  if (isAuthRoute && user && !isEmailVerifiedPage) {
+  if (
+    isAuthRoute &&
+    user &&
+    !isEmailVerifiedPage &&
+    !isUpdatePasswordRoute &&
+    !isCallbackRoute
+  ) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);

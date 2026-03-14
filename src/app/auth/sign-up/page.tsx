@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { AuthForm } from "@/components/auth/auth-form";
 import { ThemeSwitcher } from "@/components/shared/theme-switcher";
 
@@ -7,6 +8,13 @@ export default async function SignUpPage({
 }: {
   searchParams: Promise<{ error?: string; message?: string }>;
 }) {
+  const allowPublicSignup =
+    process.env.NEXT_PUBLIC_ALLOW_PUBLIC_SIGNUP?.trim() !== "false";
+  if (!allowPublicSignup) {
+    redirect(
+      "/auth/sign-in?message=Contact%20an%20administrator%20for%20access."
+    );
+  }
   const params = await searchParams;
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center bg-background px-4 py-12">

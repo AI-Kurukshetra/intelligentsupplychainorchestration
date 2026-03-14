@@ -49,9 +49,10 @@ export interface CurrentUserProfile {
   user: { id: string; email: string | null } | null;
   profile: {
     id: string;
-    full_name: string | null;
+    display_name: string | null;
     avatar_url: string | null;
     role: string;
+    supplier_id: string | null;
   } | null;
 }
 
@@ -59,8 +60,9 @@ export interface CurrentUserProfile {
 export interface UserListItem {
   id: string;
   email: string | null;
-  full_name: string | null;
+  display_name: string | null;
   avatar_url: string | null;
   role: string;
+  supplier_id: string | null;
   created_at: string;
 }

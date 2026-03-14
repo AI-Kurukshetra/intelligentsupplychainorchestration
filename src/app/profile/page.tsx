@@ -42,7 +42,7 @@ export default function ProfilePage() {
         </div>
         <div className="rounded-lg border border-border p-4 space-y-2">
           <h2 className="text-sm font-medium text-muted-foreground">Display name</h2>
-          <p className="text-foreground">{profile?.full_name ?? "—"}</p>
+          <p className="text-foreground">{profile?.display_name ?? "—"}</p>
         </div>
       </ContentContainer>
     </div>

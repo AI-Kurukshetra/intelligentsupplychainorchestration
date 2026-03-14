@@ -14,9 +14,10 @@ export async function GET() {
     profile: profile
       ? {
           id: profile.id,
-          full_name: profile.full_name ?? null,
+          display_name: profile.display_name ?? null,
           avatar_url: profile.avatar_url ?? null,
           role: profile.role,
+          supplier_id: profile.supplier_id ?? null,
         }
       : null,
   });

@@ -2,7 +2,7 @@
 
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 
-const THEME_IDS = ["light", "dark", "claude", "vercel"] as const;
+const THEME_IDS = ["light", "dark"] as const;
 export type ThemeId = (typeof THEME_IDS)[number];
 export const THEMES: readonly ThemeId[] = THEME_IDS;
 
