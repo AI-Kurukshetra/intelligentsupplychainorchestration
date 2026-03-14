@@ -6,11 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { BarChart3, CalendarDays } from "lucide-react";
 import { useDemandForecasts } from "@/hooks/use-demand-forecasts";
 import { useProducts } from "@/hooks/use-products";
-import { getErrorMessage } from "@/lib/utils";
+import { getErrorMessage, cn } from "@/lib/utils";
 import { ROUTES } from "@/constants/routes";
 import { RefreshButton } from "@/components/shared/refresh-button";
 import { PageHero } from "@/components/shared/page-hero";
@@ -19,24 +19,7 @@ export default function DemandPlanningPage() {
   const { data: forecasts, isLoading, isError, error, refetch, isFetching } = useDemandForecasts();
   const { data: products } = useProducts();
 
-  if (isLoading) {
-    return (
-      <div className="space-y-4">
-        <Skeleton className="h-8 w-64" />
-        <Skeleton className="h-48 w-full" />
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <p className="text-sm text-destructive">
-        {getErrorMessage(error, "Failed to load forecasts.")}
-      </p>
-    );
-  }
-
-  const productMap = new Map(products?.map((p) => [p.id, p]) ?? []);
+  const productMap = useMemo(() => new Map(products?.map((p) => [p.id, p]) ?? []), [products]);
 
   const metrics = useMemo(() => {
     const total = forecasts?.length ?? 0;
@@ -55,6 +38,23 @@ export default function DemandPlanningPage() {
       { label: "Forecast rows", value: total },
     ];
   }, [forecasts]);
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        <Skeleton className="h-8 w-64" />
+        <Skeleton className="h-48 w-full" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <p className="text-sm text-destructive">
+        {getErrorMessage(error, "Failed to load forecasts.")}
+      </p>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -137,9 +137,12 @@ export default function DemandPlanningPage() {
                     </TableCell>
                     <TableCell className="font-semibold">{f.effective_qty}</TableCell>
                     <TableCell className="text-right">
-                      <Button asChild size="sm" variant="outline">
-                        <Link href={`${ROUTES.PLANNING_DEMAND}/${f.product_id}`}>Manage</Link>
-                      </Button>
+                    <Link
+                      href={`${ROUTES.PLANNING_DEMAND}/${f.product_id}`}
+                      className={cn(buttonVariants({ size: "sm", variant: "outline" }))}
+                    >
+                      Manage
+                    </Link>
                     </TableCell>
                   </TableRow>
                 );

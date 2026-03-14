@@ -12,7 +12,7 @@ import {
 } from "@/config/nav";
 import { Button } from "@/components/ui/button";
 import { PanelLeftClose, PanelLeft } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useMemo, useState } from "react";
 import type { Role } from "@/constants/roles";
 
@@ -78,15 +78,15 @@ export function AppSidebar({ userRole, collapsed, onToggle }: AppSidebarProps) {
       </aside>
 
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="inline-flex h-9 w-9 shrink-0 text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground lg:hidden"
-          >
-            <PanelLeft className="h-4 w-4" />
-          </Button>
-        </SheetTrigger>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          onClick={() => setOpen(true)}
+          className="inline-flex h-9 w-9 shrink-0 text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground lg:hidden"
+        >
+          <PanelLeft className="h-4 w-4" />
+        </Button>
         <SheetContent side="left" className="p-0">
           <div className="flex h-full flex-col bg-sidebar">
             <div className="flex items-center gap-3 border-b border-sidebar-border px-3 py-3">
@@ -127,6 +127,7 @@ function NavList({ groupedItems, footerItems, collapsed, pathname, onNavigate }:
     <>
       <div className="flex flex-1 flex-col gap-1 overflow-hidden p-2">
         {groupOrder.map((group) => {
+          if (!group) return null;
           const items = groupedItems[group] ?? [];
           if (!items.length) return null;
           return (

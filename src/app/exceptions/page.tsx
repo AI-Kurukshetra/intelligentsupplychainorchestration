@@ -5,10 +5,10 @@ import { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useExceptions } from "@/hooks/use-exceptions";
-import { getErrorMessage } from "@/lib/utils";
+import { getErrorMessage, cn } from "@/lib/utils";
 import { AlertTriangle, Filter, Plus } from "lucide-react";
 import { FilterSelect } from "@/components/shared/filter-select";
 import { RefreshButton } from "@/components/shared/refresh-button";
@@ -33,6 +33,7 @@ const severityBadge = (severity: string) => {
     },
   };
   const tone = map[severity] ?? map.low;
+  if (!tone) return null;
   return (
     <Badge variant={tone.variant ?? "outline"} className={`px-2 text-[11px] ${tone.className}`}>
       {tone.label}
@@ -48,6 +49,7 @@ const statusBadge = (status: string) => {
     escalated: { label: "Escalated", className: "bg-primary/10 text-primary border-primary/30" },
   };
   const item = tone[status] ?? tone.open;
+  if (!item) return null;
   return (
     <Badge variant="outline" className={`px-2 text-[11px] ${item.className}`}>
       {item.label}
@@ -66,13 +68,13 @@ export default function ExceptionsPage() {
     type: type || undefined,
   });
 
-  const queue = data ?? [];
   const stats = useMemo(() => {
+    const queue = data ?? [];
     const open = queue.filter((ex) => ex.status === "open").length;
     const critical = queue.filter((ex) => ex.severity === "critical").length;
     const total = queue.length;
     return { open, critical, total };
-  }, [queue]);
+  }, [data]);
 
   if (isLoading) {
     return (
@@ -110,12 +112,13 @@ export default function ExceptionsPage() {
               tooltip="Reload queue"
               buttonProps={{ className: "border-primary/30 bg-primary/5 text-primary" }}
             />
-            <Button asChild size="sm">
-              <Link href="/exceptions/new">
-                <Plus className="mr-2 h-4 w-4" />
-                Create exception
-              </Link>
-            </Button>
+            <Link
+              href="/exceptions/new"
+              className={cn(buttonVariants({ size: "sm" }))}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Create exception
+            </Link>
           </>
         }
       />
@@ -141,7 +144,7 @@ export default function ExceptionsPage() {
         <CardContent className="grid gap-3 md:grid-cols-3">
           <FilterSelect
             value={status}
-            onChange={setStatus}
+            onChange={(v) => setStatus(v ?? "")}
             placeholder="All statuses"
             options={[
               { value: "", label: "All statuses" },
@@ -153,7 +156,7 @@ export default function ExceptionsPage() {
           />
           <FilterSelect
             value={severity}
-            onChange={setSeverity}
+            onChange={(v) => setSeverity(v ?? "")}
             placeholder="All severities"
             options={[
               { value: "", label: "All severities" },
@@ -165,7 +168,7 @@ export default function ExceptionsPage() {
           />
           <FilterSelect
             value={type}
-            onChange={setType}
+            onChange={(v) => setType(v ?? "")}
             placeholder="All types"
             options={[
               { value: "", label: "All types" },
@@ -210,9 +213,12 @@ export default function ExceptionsPage() {
                   <TableCell>{severityBadge(ex.severity)}</TableCell>
                   <TableCell>{statusBadge(ex.status)}</TableCell>
                   <TableCell className="text-right">
-                    <Button asChild size="sm" variant="outline">
-                      <Link href={`/exceptions/${ex.id}`}>View</Link>
-                    </Button>
+                    <Link
+                      href={`/exceptions/${ex.id}`}
+                      className={cn(buttonVariants({ size: "sm", variant: "outline" }))}
+                    >
+                      View
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))}
