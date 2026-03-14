@@ -22,12 +22,7 @@ export default async function SignInPage({
             Use your email or a provider to continue
           </p>
         </div>
-        <AuthForm
-          mode="sign-in"
-          redirectTo={params.redirectTo}
-          error={params.error}
-          message={params.message}
-        />
+        <AuthForm mode="sign-in" error={params.error} message={params.message} />
         <p className="text-center text-muted-foreground text-sm">
           Don&apos;t have an account?{" "}
           <Link

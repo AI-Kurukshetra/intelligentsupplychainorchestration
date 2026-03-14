@@ -1,13 +1,14 @@
 import { redirect } from "next/navigation";
 import { requireRole } from "@/lib/auth";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
+import { ROLES } from "@/constants/roles";
 
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const data = await requireRole(["admin"]);
+  const data = await requireRole([ROLES.ADMIN, ROLES.SUPPLY_PLANNER, ROLES.DEMAND_PLANNER]);
   if (!data) redirect("/dashboard");
 
   return (

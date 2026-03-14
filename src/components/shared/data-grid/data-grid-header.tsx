@@ -92,12 +92,14 @@ export function DataGridHeader<TData>({ headerGroups, columns }: DataGridHeaderP
                           {isSelectFilter ? (
                             <select
                               className="h-9 w-full min-w-0 rounded-md border border-input bg-background px-3 py-1.5 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                              value={(header.column.getFilterValue() as string) ?? ""}
+                              value={(header.column.getFilterValue() as string) ?? "__all"}
                               onChange={(e) =>
-                                header.column.setFilterValue(e.target.value || undefined)
+                                header.column.setFilterValue(
+                                  e.target.value === "__all" ? undefined : e.target.value
+                                )
                               }
                             >
-                              <option value="">All</option>
+                              <option value="__all">All</option>
                               {(colDef.filterOptions as DataGridFilterOption[]).map((opt) => (
                                 <option key={opt.value} value={opt.value}>
                                   {opt.label}

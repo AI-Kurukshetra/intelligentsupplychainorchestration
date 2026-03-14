@@ -4,10 +4,13 @@ import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { getBrowserSupabaseClient } from "@/lib/supabase";
 import { ROUTES } from "@/constants/routes";
+import { useQueryClient } from "@tanstack/react-query";
+import { QUERY_KEYS } from "@/constants/query-keys";
 
 export function useAuth() {
   const router = useRouter();
   const supabase = getBrowserSupabaseClient();
+  const qc = useQueryClient();
 
   const signIn = useCallback(
     async (email: string, password: string): Promise<void> => {
@@ -15,13 +18,19 @@ export function useAuth() {
       if (error) {
         throw new Error(error.message);
       }
+      await qc.invalidateQueries({ queryKey: QUERY_KEYS.profile.current });
+      await qc.invalidateQueries({ queryKey: QUERY_KEYS.auth.me });
       router.push(ROUTES.DASHBOARD);
     },
-    [router, supabase]
+    [router, supabase, qc]
   );
 
   const signUp = useCallback(
-    async (email: string, password: string, fullName?: string | null): Promise<void> => {
+    async (
+      email: string,
+      password: string,
+      displayName?: string | null
+    ): Promise<void> => {
       const origin =
         typeof window !== "undefined" && window.location.origin
           ? window.location.origin
@@ -35,7 +44,7 @@ export function useAuth() {
         email,
         password,
         options: {
-          data: fullName ? { full_name: fullName } : undefined,
+          data: displayName ? { display_name: displayName } : undefined,
           emailRedirectTo,
         },
       });
@@ -58,9 +67,10 @@ export function useAuth() {
 
   const signOut = useCallback(async (): Promise<void> => {
     await supabase.auth.signOut();
+    await qc.invalidateQueries({ queryKey: QUERY_KEYS.profile.current });
+    await qc.invalidateQueries({ queryKey: QUERY_KEYS.auth.me });
     router.push(ROUTES.HOME);
-  }, [router, supabase]);
+  }, [router, supabase, qc]);
 
   return { signIn, signUp, signOut };
 }
-

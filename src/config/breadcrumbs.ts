@@ -7,15 +7,35 @@ export interface BreadcrumbSegment {
   href?: string;
 }
 
-/** Path pattern -> segments. First segment typically Home/Dashboard; last is current page. */
+/** Path pattern -> segments. First segment typically Dashboard; last is current page. */
 const pathSegments: Record<string, BreadcrumbSegment[]> = {
   "/": [{ label: "Home" }],
-  "/dashboard": [
+  "/dashboard": [{ label: "Dashboard", href: "/dashboard" }],
+  "/planning/demand": [
     { label: "Dashboard", href: "/dashboard" },
+    { label: "Planning" },
+    { label: "Demand" },
   ],
-  "/dashboard/table": [
+  "/planning/demand/": [
     { label: "Dashboard", href: "/dashboard" },
-    { label: "Table" },
+    { label: "Planning", href: "/planning/demand" },
+    { label: "Demand" },
+  ],
+  "/inventory": [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Inventory" },
+  ],
+  "/inventory/": [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Inventory", href: "/inventory" },
+  ],
+  "/exceptions": [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Exceptions" },
+  ],
+  "/exceptions/": [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Exceptions", href: "/exceptions" },
   ],
   "/admin": [
     { label: "Dashboard", href: "/dashboard" },
@@ -26,9 +46,42 @@ const pathSegments: Record<string, BreadcrumbSegment[]> = {
     { label: "Admin", href: "/admin" },
     { label: "Users" },
   ],
+  "/admin/master-data": [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Admin", href: "/admin" },
+    { label: "Master Data" },
+  ],
+  "/admin/master-data/products": [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Admin", href: "/admin" },
+    { label: "Master Data", href: "/admin/master-data" },
+    { label: "Products" },
+  ],
+  "/admin/master-data/suppliers": [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Admin", href: "/admin" },
+    { label: "Master Data", href: "/admin/master-data" },
+    { label: "Suppliers" },
+  ],
+  "/admin/master-data/facilities": [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Admin", href: "/admin" },
+    { label: "Master Data", href: "/admin/master-data" },
+    { label: "Facilities" },
+  ],
+  "/admin/master-data/boms": [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Admin", href: "/admin" },
+    { label: "Master Data", href: "/admin/master-data" },
+    { label: "BOMs" },
+  ],
   "/profile": [
     { label: "Dashboard", href: "/dashboard" },
     { label: "Profile" },
+  ],
+  "/supplier-portal": [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Supplier Portal" },
   ],
 };
 

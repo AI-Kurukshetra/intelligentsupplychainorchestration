@@ -1,18 +1,17 @@
 export interface Profile {
   id: string;
   email: string | null;
-  full_name: string | null;
+  display_name: string | null;
   avatar_url: string | null;
   role: string;
+  supplier_id: string | null;
   created_at: string;
   updated_at: string;
 }
 
-export interface Item {
+export interface Supplier {
   id: string;
-  title: string;
-  description: string | null;
-  created_by: string;
+  name: string;
   created_at: string;
   updated_at: string;
 }
@@ -27,16 +26,22 @@ export interface Database {
           updated_at?: string;
         };
         Update: Partial<Profile>;
+        Relationships: [];
       };
-      items: {
-        Row: Item;
-        Insert: Omit<Item, "id" | "created_at" | "updated_at"> & {
+      suppliers: {
+        Row: Supplier;
+        Insert: Omit<Supplier, "id" | "created_at" | "updated_at"> & {
           id?: string;
           created_at?: string;
           updated_at?: string;
         };
-        Update: Partial<Item>;
+        Update: Partial<Supplier>;
+        Relationships: [];
       };
     };
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
+    Enums: Record<string, never>;
+    CompositeTypes: Record<string, never>;
   };
 }

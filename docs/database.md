@@ -44,22 +44,21 @@ Stores app-level user data including role for RBAC. Row is created on sign-up vi
 | ----------- | ------------ | ------------------------------ |
 | id          | uuid         | PK, FK to auth.users(id)       |
 | email       | text         |                                |
-| full_name   | text         |                                |
+| display_name | text         |                                |
 | avatar_url  | text         |                                |
-| role        | text         | admin / user; default 'user'   |
+| role        | text         | admin / supply_planner / demand_planner / supplier / viewer; default 'viewer' |
+| supplier_id | uuid         | FK suppliers(id); only for role = supplier |
 | created_at  | timestamptz  |                                |
 | updated_at  | timestamptz  |                                |
 
-### `items`
+### `suppliers`
 
-Demo entity for dashboard content. Users can CRUD own items; admins can CRUD any.
+Suppliers available for supplier-role users.
 
 | Column      | Type         | Notes                    |
 | ----------- | ------------ | ------------------------ |
 | id          | uuid         | PK                       |
-| title       | text         | not null                 |
-| description | text         |                          |
-| created_by  | uuid         | FK auth.users            |
+| name        | text         | not null                 |
 | created_at  | timestamptz  |                          |
 | updated_at  | timestamptz  |                          |
 
@@ -67,8 +66,52 @@ Demo entity for dashboard content. Users can CRUD own items; admins can CRUD any
 
 ## Row Level Security
 
-- **profiles:** Authenticated users can select all (for display); insert/update only own row.
-- **items:** Authenticated users can select all; insert with `created_by = auth.uid()`; update/delete own or (for admins) any. See migration file for full policies.
+- **profiles:** Users can read their own; admins can read all. Users can update display_name only; admins can update roles/supplier_id.
+- **suppliers:** Admin-only.
+
+### RLS helpers and guards
+
+To avoid recursive policies, admin checks use a security definer helper:
+
+```sql
+create or replace function public.is_admin()
+returns boolean
+language sql
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1 from public.profiles p
+    where p.id = auth.uid() and p.role = 'admin'
+  );
+$$;
+```
+
+Role changes are guarded by a trigger so non-admins cannot modify role/supplier_id:
+
+```sql
+create or replace function public.prevent_profile_role_change()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if not public.is_admin() then
+    if new.role is distinct from old.role
+       or new.supplier_id is distinct from old.supplier_id then
+      raise exception 'Only admins can change role or supplier_id.';
+    end if;
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists prevent_profile_role_change on public.profiles;
+create trigger prevent_profile_role_change
+  before update on public.profiles
+  for each row execute function public.prevent_profile_role_change();
+```
 
 ---
 
@@ -85,3 +128,15 @@ select tablename, policyname, cmd, qual
 from pg_policies
 where schemaname = 'public';
 ```
+
+## Master Data Tables (Phase 1)
+- products (id, sku, name, description, unit_of_measure, lead_time_days, created_at)
+- suppliers (id, name, contact_email, contact_name, country, status, created_at)
+- facilities (id, name, type, location, capacity_units, created_at)
+- boms (id, parent_product_id, component_product_id, quantity, unit_of_measure)
+- demand_history (id, product_id, period_start, period_end, quantity, source, created_at)
+- demand_forecasts (id, product_id, period_start, period_end, forecast_qty, override_qty, override_reason, created_by, created_at)
+- inventory_levels (id, product_id, facility_id, quantity_on_hand, safety_stock_qty, reorder_point, last_updated)
+- inventory_adjustments (id, inventory_level_id, delta_qty, reason, adjusted_by, created_at)
+- exceptions (id, type, severity, status, title, description, related_product_id, related_facility_id, assigned_to, created_at, resolved_at)
+- exception_comments (id, exception_id, author_id, content, created_at)

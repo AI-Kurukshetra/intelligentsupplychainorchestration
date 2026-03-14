@@ -1,10 +1,10 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiGet, apiPatch } from "@/lib/api/client";
+import { apiGet, apiPatch, apiPost } from "@/lib/api/client";
 import { QUERY_KEYS } from "@/constants/query-keys";
 import type { PaginatedResponse, UserListItem } from "@/types/api";
-import { getErrorMessage } from "@/lib/utils";
+import type { CreateUserValues } from "@/types/schemas";
 
 export type UseUsersParams = {
   page?: number;
@@ -22,7 +22,7 @@ export function useUsers(params: UseUsersParams = {}) {
       search.set("page", String(page));
       search.set("limit", String(limit));
       const data = await apiGet<PaginatedResponse<UserListItem>>(
-        `/users?${search.toString()}`
+        `/admin/users?${search.toString()}`
       );
       return data;
     },
@@ -33,19 +33,39 @@ export function useUpdateUserRole() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (input: { id: string; role: UserListItem["role"] }) => {
-      return apiPatch<UserListItem>(`/users/${input.id}/role`, {
+    mutationFn: async (input: {
+      id: string;
+      role: UserListItem["role"];
+      supplier_id?: string | null;
+    }) => {
+      return apiPatch<UserListItem>(`/admin/users/${input.id}`, {
         role: input.role,
+        supplier_id: input.supplier_id ?? null,
       });
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.users.all });
     },
-    onError: (error: unknown) => {
-      // Surface error via generic handler; UI components can also handle directly.
-      // eslint-disable-next-line no-console
-      console.error(getErrorMessage(error));
+  });
+}
+
+export function useCreateUser() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (input: CreateUserValues) => {
+      return apiPost<UserListItem>("/admin/users/invite", input);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.users.all });
     },
   });
 }
 
+export function useResetUserPassword() {
+  return useMutation({
+    mutationFn: async (input: { id: string }) => {
+      return apiPost<{ message: string }>(`/admin/users/${input.id}/reset-password`);
+    },
+  });
+}

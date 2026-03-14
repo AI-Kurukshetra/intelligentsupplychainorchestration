@@ -20,4 +20,17 @@ function getSupabaseEnv() {
   return { url, key };
 }
 
-export { getSupabaseEnv };
+function getSupabaseAdminEnv() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+
+  if (!url?.trim() || !serviceRoleKey) {
+    throw new Error(
+      "Missing Supabase env: set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env.local."
+    );
+  }
+
+  return { url, serviceRoleKey };
+}
+
+export { getSupabaseEnv, getSupabaseAdminEnv };

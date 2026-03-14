@@ -138,7 +138,10 @@ function buildColumnDefs<TData extends { id?: string }>(
     : [];
 
   const mapped = columns.map((col) => {
-    const { filterType: _ft, filterOptions: _fo, enableFiltering: _ef, ...rest } = col;
+    const { filterType, filterOptions, enableFiltering, ...rest } = col;
+    void filterType;
+    void filterOptions;
+    void enableFiltering;
     const accessorKey = "accessorKey" in col ? (col as { accessorKey?: string }).accessorKey : undefined;
     return {
       ...rest,
@@ -215,6 +218,7 @@ export function DataGrid<TData extends { id?: string }>({
     [onStateChange, paginationState, sorting, globalFilter, columnFilters]
   );
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns: columnDefs,
