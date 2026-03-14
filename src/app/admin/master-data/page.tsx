@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { ROUTES } from "@/constants/routes";
 import { Boxes, Factory, ClipboardList } from "lucide-react";
 import { PageHero } from "@/components/shared/page-hero";
+import { cn } from "@/lib/utils";
 
 const links = [
   { label: "Products", href: ROUTES.ADMIN_PRODUCTS, icon: Boxes, description: "SKUs, lead times, units" },
@@ -35,9 +36,12 @@ export default function MasterDataHomePage() {
                 <CardDescription>{link.description}</CardDescription>
               </CardHeader>
               <CardContent>
-                <Button asChild variant="outline" className="w-full justify-center">
-                  <Link href={link.href}>Open</Link>
-                </Button>
+                <Link
+                  href={link.href}
+                  className={cn(buttonVariants({ variant: "outline" }), "w-full justify-center")}
+                >
+                  Open
+                </Link>
               </CardContent>
             </Card>
           );

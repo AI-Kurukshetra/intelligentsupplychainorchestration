@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -40,7 +40,7 @@ import {
   type DemandForecastOverrideInput,
   type DemandForecastCreateInput,
 } from "@/types/schemas";
-import { getErrorMessage } from "@/lib/utils";
+import { getErrorMessage, cn } from "@/lib/utils";
 import { Pencil, ArrowLeft, CalendarDays } from "lucide-react";
 import Link from "next/link";
 import { RefreshButton } from "@/components/shared/refresh-button";
@@ -168,12 +168,16 @@ export default function DemandProductDetailPage() {
               tooltip="Clear selected override"
               buttonProps={{ className: "border-primary/30 bg-primary/5 text-primary" }}
             />
-            <Button asChild size="sm" variant="secondary">
-              <Link href="/planning/demand">
-                <ArrowLeft className="mr-1 h-4 w-4" />
-                Back to list
-              </Link>
-            </Button>
+            <Link
+              href="/planning/demand"
+              className={cn(
+                buttonVariants({ variant: "secondary", size: "sm" }),
+                "bg-white text-slate-900 hover:bg-slate-100"
+              )}
+            >
+              <ArrowLeft className="mr-1 h-4 w-4" />
+              Back to list
+            </Link>
           </>
         }
       />

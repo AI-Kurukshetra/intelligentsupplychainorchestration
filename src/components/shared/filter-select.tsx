@@ -13,7 +13,7 @@ export type FilterOption = { value: string; label: string };
 
 type FilterSelectProps = {
   value: string;
-  onChange: (v: string) => void;
+  onChange: (v: string | null) => void;
   options: FilterOption[];
   placeholder?: string;
   className?: string;
@@ -21,7 +21,7 @@ type FilterSelectProps = {
 
 export function FilterSelect({ value, onChange, options, placeholder, className }: FilterSelectProps) {
   return (
-    <Select value={value || undefined} onValueChange={onChange}>
+    <Select value={value || undefined} onValueChange={(val) => onChange(val ?? "")}>
       <SelectTrigger className={cn("w-full", className)}>
         <SelectValue placeholder={placeholder ?? "Select"} />
       </SelectTrigger>

@@ -135,11 +135,11 @@ export default function InventoryPage() {
           <CardDescription>Slice by product, facility, or status.</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-3 md:grid-cols-3">
-          <FilterSelect value={productFilter} onChange={setProductFilter} options={productOptions} placeholder="All products" />
-          <FilterSelect value={facilityFilter} onChange={setFacilityFilter} options={facilityOptions} placeholder="All facilities" />
+          <FilterSelect value={productFilter} onChange={(v) => setProductFilter(v ?? "")} options={productOptions} placeholder="All products" />
+          <FilterSelect value={facilityFilter} onChange={(v) => setFacilityFilter(v ?? "")} options={facilityOptions} placeholder="All facilities" />
           <FilterSelect
             value={statusFilter}
-            onChange={setStatusFilter}
+            onChange={(v) => setStatusFilter(v ?? "")}
             options={[
               { value: "", label: "All statuses" },
               { value: "critical", label: "Critical" },
@@ -235,9 +235,9 @@ export default function InventoryPage() {
                   <TableCell className="text-right">
                     <AdjustInline
                       id={row.id}
-                      onAdjust={(delta, reason) =>
-                        adjust.mutateAsync({ id: row.id, input: { delta_qty: delta, reason } })
-                      }
+                      onAdjust={async (delta, reason) => {
+                        await adjust.mutateAsync({ id: row.id, input: { delta_qty: delta, reason } });
+                      }}
                       isLoading={adjust.isPending}
                       disabled={!canAdjust}
                     />

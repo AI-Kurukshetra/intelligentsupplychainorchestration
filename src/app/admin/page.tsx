@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ROUTES } from "@/constants/routes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { Shield, ClipboardList, Users, Factory } from "lucide-react";
 
 export default function AdminPage() {
@@ -22,11 +23,12 @@ export default function AdminPage() {
           </CardHeader>
           <CardContent className="space-y-3 text-sm text-muted-foreground">
             <p>Invite users, assign roles, and reset passwords.</p>
-            <Button asChild size="sm" variant="outline" className="w-full justify-center">
-              <Link href={`${ROUTES.ADMIN}/users`}>
-                <Users className="mr-2 h-4 w-4" /> Manage users
-              </Link>
-            </Button>
+            <Link
+              href={`${ROUTES.ADMIN}/users`}
+              className={cn(buttonVariants({ size: "sm", variant: "outline" }), "w-full justify-center")}
+            >
+              <Users className="mr-2 h-4 w-4" /> Manage users
+            </Link>
           </CardContent>
         </Card>
 
@@ -38,18 +40,30 @@ export default function AdminPage() {
           <CardContent className="space-y-3 text-sm text-muted-foreground">
             <p>Products, suppliers, facilities, BOMs — the backbone for planning.</p>
             <div className="grid grid-cols-2 gap-2">
-              <Button asChild size="sm" variant="outline" className="justify-center">
-                <Link href={ROUTES.ADMIN_PRODUCTS}>Products</Link>
-              </Button>
-              <Button asChild size="sm" variant="outline" className="justify-center">
-                <Link href={ROUTES.ADMIN_SUPPLIERS}>Suppliers</Link>
-              </Button>
-              <Button asChild size="sm" variant="outline" className="justify-center">
-                <Link href={ROUTES.ADMIN_FACILITIES}>Facilities</Link>
-              </Button>
-              <Button asChild size="sm" variant="outline" className="justify-center">
-                <Link href={ROUTES.ADMIN_BOMS}>BOMs</Link>
-              </Button>
+              <Link
+                href={ROUTES.ADMIN_PRODUCTS}
+                className={cn(buttonVariants({ size: "sm", variant: "outline" }), "justify-center")}
+              >
+                Products
+              </Link>
+              <Link
+                href={ROUTES.ADMIN_SUPPLIERS}
+                className={cn(buttonVariants({ size: "sm", variant: "outline" }), "justify-center")}
+              >
+                Suppliers
+              </Link>
+              <Link
+                href={ROUTES.ADMIN_FACILITIES}
+                className={cn(buttonVariants({ size: "sm", variant: "outline" }), "justify-center")}
+              >
+                Facilities
+              </Link>
+              <Link
+                href={ROUTES.ADMIN_BOMS}
+                className={cn(buttonVariants({ size: "sm", variant: "outline" }), "justify-center")}
+              >
+                BOMs
+              </Link>
             </div>
           </CardContent>
         </Card>
@@ -61,9 +75,12 @@ export default function AdminPage() {
           </CardHeader>
           <CardContent className="space-y-3 text-sm text-muted-foreground">
             <p>Configure supplier access. Redirects supplier users to their portal.</p>
-            <Button asChild size="sm" variant="outline" className="w-full justify-center">
-              <Link href={ROUTES.SUPPLIER_PORTAL}>View portal</Link>
-            </Button>
+            <Link
+              href={ROUTES.SUPPLIER_PORTAL}
+              className={cn(buttonVariants({ size: "sm", variant: "outline" }), "w-full justify-center")}
+            >
+              View portal
+            </Link>
           </CardContent>
         </Card>
       </div>
