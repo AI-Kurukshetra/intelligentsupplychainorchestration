@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { ROUTES } from "@/constants/routes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { Shield, ClipboardList, Users, Factory } from "lucide-react";
 
 export default function AdminPage() {
@@ -25,7 +23,7 @@ export default function AdminPage() {
             <p>Invite users, assign roles, and reset passwords.</p>
             <Link
               href={`${ROUTES.ADMIN}/users`}
-              className={cn(buttonVariants({ size: "sm", variant: "outline" }), "w-full justify-center")}
+              className="group/button inline-flex h-7 w-full shrink-0 items-center justify-center gap-1 rounded-[min(var(--radius-md),12px)] border border-border bg-background px-2.5 text-[0.8rem] font-medium text-foreground transition-all outline-none hover:bg-muted hover:text-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
             >
               <Users className="mr-2 h-4 w-4" /> Manage users
             </Link>
@@ -42,25 +40,25 @@ export default function AdminPage() {
             <div className="grid grid-cols-2 gap-2">
               <Link
                 href={ROUTES.ADMIN_PRODUCTS}
-                className={cn(buttonVariants({ size: "sm", variant: "outline" }), "justify-center")}
+                className="group/button inline-flex h-7 shrink-0 items-center justify-center gap-1 rounded-[min(var(--radius-md),12px)] border border-border bg-background px-2.5 text-[0.8rem] font-medium text-foreground transition-all outline-none hover:bg-muted hover:text-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
               >
                 Products
               </Link>
               <Link
                 href={ROUTES.ADMIN_SUPPLIERS}
-                className={cn(buttonVariants({ size: "sm", variant: "outline" }), "justify-center")}
+                className="group/button inline-flex h-7 shrink-0 items-center justify-center gap-1 rounded-[min(var(--radius-md),12px)] border border-border bg-background px-2.5 text-[0.8rem] font-medium text-foreground transition-all outline-none hover:bg-muted hover:text-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
               >
                 Suppliers
               </Link>
               <Link
                 href={ROUTES.ADMIN_FACILITIES}
-                className={cn(buttonVariants({ size: "sm", variant: "outline" }), "justify-center")}
+                className="group/button inline-flex h-7 shrink-0 items-center justify-center gap-1 rounded-[min(var(--radius-md),12px)] border border-border bg-background px-2.5 text-[0.8rem] font-medium text-foreground transition-all outline-none hover:bg-muted hover:text-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
               >
                 Facilities
               </Link>
               <Link
                 href={ROUTES.ADMIN_BOMS}
-                className={cn(buttonVariants({ size: "sm", variant: "outline" }), "justify-center")}
+                className="group/button inline-flex h-7 shrink-0 items-center justify-center gap-1 rounded-[min(var(--radius-md),12px)] border border-border bg-background px-2.5 text-[0.8rem] font-medium text-foreground transition-all outline-none hover:bg-muted hover:text-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
               >
                 BOMs
               </Link>
@@ -77,7 +75,7 @@ export default function AdminPage() {
             <p>Configure supplier access. Redirects supplier users to their portal.</p>
             <Link
               href={ROUTES.SUPPLIER_PORTAL}
-              className={cn(buttonVariants({ size: "sm", variant: "outline" }), "w-full justify-center")}
+              className="group/button inline-flex h-7 w-full shrink-0 items-center justify-center gap-1 rounded-[min(var(--radius-md),12px)] border border-border bg-background px-2.5 text-[0.8rem] font-medium text-foreground transition-all outline-none hover:bg-muted hover:text-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
             >
               View portal
             </Link>

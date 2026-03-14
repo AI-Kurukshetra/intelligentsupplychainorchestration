@@ -1,10 +1,8 @@
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { buttonVariants } from "@/components/ui/button";
 import { ROUTES } from "@/constants/routes";
 import { Boxes, Factory, ClipboardList } from "lucide-react";
 import { PageHero } from "@/components/shared/page-hero";
-import { cn } from "@/lib/utils";
 
 const links = [
   { label: "Products", href: ROUTES.ADMIN_PRODUCTS, icon: Boxes, description: "SKUs, lead times, units" },
@@ -38,7 +36,7 @@ export default function MasterDataHomePage() {
               <CardContent>
                 <Link
                   href={link.href}
-                  className={cn(buttonVariants({ variant: "outline" }), "w-full justify-center")}
+                  className="group/button inline-flex h-8 w-full shrink-0 items-center justify-center gap-1.5 rounded-lg border border-border bg-background px-2.5 text-sm font-medium text-foreground transition-all outline-none hover:bg-muted hover:text-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
                 >
                   Open
                 </Link>

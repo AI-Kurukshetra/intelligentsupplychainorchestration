@@ -4,10 +4,8 @@ import { HomeNav } from "@/components/home/home-nav";
 import { ContentContainer } from "@/components/shared/content-container";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { buttonVariants } from "@/components/ui/button";
 import { ROUTES } from "@/constants/routes";
 import { PageHero } from "@/components/shared/page-hero";
-import { cn } from "@/lib/utils";
 
 const flows = [
   "Auth & Onboarding",
@@ -73,7 +71,7 @@ export default async function HomePage() {
                 <div className="flex gap-2">
                   <Link
                     href={user ? ROUTES.DASHBOARD : ROUTES.SIGN_IN}
-                    className={cn(buttonVariants({ size: "lg" }))}
+                    className="group/button inline-flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-lg border border-transparent bg-primary px-2.5 text-sm font-medium text-primary-foreground transition-all outline-none hover:bg-primary/80 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
                   >
                     {user ? "Open dashboard" : "Sign in to start"}
                   </Link>
@@ -199,13 +197,13 @@ export default async function HomePage() {
           <div className="flex gap-2">
             <Link
               href={user ? ROUTES.DASHBOARD : ROUTES.SIGN_IN}
-              className={cn(buttonVariants())}
+              className="group/button inline-flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-lg border border-transparent bg-primary px-2.5 text-sm font-medium text-primary-foreground transition-all outline-none hover:bg-primary/80 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
             >
               {user ? "Open dashboard" : "Sign in"}
             </Link>
             <Link
               href="mailto:sales@supplychaincontrol.com"
-              className={cn(buttonVariants({ variant: "outline" }))}
+              className="group/button inline-flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-lg border border-border bg-background px-2.5 text-sm font-medium text-foreground transition-all outline-none hover:bg-muted hover:text-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:border-input dark:bg-input/30 dark:hover:bg-input/50"
             >
               Book a demo
             </Link>
