@@ -5,7 +5,7 @@ export const supplierBaseSchema = z.object({
   contact_email: z.string().email("Enter a valid email").max(160),
   contact_name: z.string().min(1, "Contact name is required").max(160),
   country: z.string().min(1, "Country is required").max(80),
-  status: z.enum(["active", "inactive"]).default("active"),
+  status: z.enum(["active", "inactive"]),
 });
 
 export const supplierCreateSchema = supplierBaseSchema;

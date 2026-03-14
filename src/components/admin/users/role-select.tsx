@@ -45,8 +45,9 @@ export function RoleSelect({ userId, currentRole, supplierId }: RoleSelectProps)
   }, [supplierId]);
 
   useEffect(() => {
-    if (roleValue === ROLES.SUPPLIER && !supplierValue && suppliers?.length) {
-      setSupplierValue(suppliers[0].id);
+    const firstSupplierId = suppliers?.[0]?.id;
+    if (roleValue === ROLES.SUPPLIER && !supplierValue && firstSupplierId) {
+      setSupplierValue(firstSupplierId);
     }
   }, [roleValue, supplierValue, suppliers]);
 
@@ -90,7 +91,7 @@ export function RoleSelect({ userId, currentRole, supplierId }: RoleSelectProps)
       {roleValue === ROLES.SUPPLIER && (
         <Select
           value={supplierValue || "none"}
-          onValueChange={(val) => setSupplierValue(val === "none" ? "" : val)}
+          onValueChange={(val) => setSupplierValue(val && val !== "none" ? val : "")}
         >
           <SelectTrigger className="w-[160px]">
             <SelectValue placeholder="Assign supplier" />

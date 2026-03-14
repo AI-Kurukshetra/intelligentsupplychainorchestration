@@ -4,9 +4,10 @@ import { HomeNav } from "@/components/home/home-nav";
 import { ContentContainer } from "@/components/shared/content-container";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { ROUTES } from "@/constants/routes";
 import { PageHero } from "@/components/shared/page-hero";
+import { cn } from "@/lib/utils";
 
 const flows = [
   "Auth & Onboarding",
@@ -70,11 +71,12 @@ export default async function HomePage() {
               badges={["Demand", "Inventory", "Exceptions", "Planning"]}
               actions={
                 <div className="flex gap-2">
-                  <Button asChild size="lg">
-                    <Link href={user ? ROUTES.DASHBOARD : ROUTES.SIGN_IN}>
-                      {user ? "Open dashboard" : "Sign in to start"}
-                    </Link>
-                  </Button>
+                  <Link
+                    href={user ? ROUTES.DASHBOARD : ROUTES.SIGN_IN}
+                    className={cn(buttonVariants({ size: "lg" }))}
+                  >
+                    {user ? "Open dashboard" : "Sign in to start"}
+                  </Link>
                 </div>
               }
             />
@@ -195,14 +197,18 @@ export default async function HomePage() {
             <p className="text-sm text-muted-foreground">Log in to your tenant or talk to us about rollout.</p>
           </div>
           <div className="flex gap-2">
-            <Button asChild>
-              <Link href={user ? ROUTES.DASHBOARD : ROUTES.SIGN_IN}>
-                {user ? "Open dashboard" : "Sign in"}
-              </Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link href="mailto:sales@supplychaincontrol.com">Book a demo</Link>
-            </Button>
+            <Link
+              href={user ? ROUTES.DASHBOARD : ROUTES.SIGN_IN}
+              className={cn(buttonVariants())}
+            >
+              {user ? "Open dashboard" : "Sign in"}
+            </Link>
+            <Link
+              href="mailto:sales@supplychaincontrol.com"
+              className={cn(buttonVariants({ variant: "outline" }))}
+            >
+              Book a demo
+            </Link>
           </div>
         </ContentContainer>
       </footer>

@@ -1,7 +1,6 @@
 "use client";
 
-import { Button, type ButtonProps } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { RefreshCcw } from "lucide-react";
 import type { ComponentProps, ReactNode } from "react";
@@ -12,8 +11,7 @@ type RefreshButtonProps = {
   loading?: boolean;
   tooltip?: string;
   className?: string;
-  buttonProps?: ButtonProps;
-  asChild?: boolean;
+  buttonProps?: ComponentProps<typeof Button>;
   children?: ReactNode;
 };
 
@@ -24,22 +22,19 @@ export function RefreshButton({
   tooltip,
   className,
   buttonProps,
-  asChild = false,
   children,
 }: RefreshButtonProps) {
   const btn = (
     <Button
-      asChild={asChild}
       variant="outline"
       size="sm"
       className={cn("gap-2 rounded-md border-border/80 bg-background/60 text-foreground shadow-sm hover:border-border hover:bg-muted/60", className)}
       onClick={onClick}
       disabled={loading}
+      title={tooltip}
       {...buttonProps}
     >
-      {asChild ? (
-        children ?? null
-      ) : (
+      {children ?? (
         <>
           <RefreshCcw className={cn("h-4 w-4", loading && "animate-spin")} />
           <span>{loading ? "Refreshing..." : label}</span>
@@ -48,14 +43,5 @@ export function RefreshButton({
     </Button>
   );
 
-  if (!tooltip) return btn;
-
-  return (
-    <TooltipProvider delayDuration={100}>
-      <Tooltip>
-        <TooltipTrigger asChild>{btn}</TooltipTrigger>
-        <TooltipContent>{tooltip}</TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  );
+  return btn;
 }

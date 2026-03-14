@@ -2,12 +2,12 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import {
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { useExceptionDetail, useExceptionComments, useCreateExceptionComment, useUpdateException } from "@/hooks/use-exceptions";
 import { exceptionCommentSchema, exceptionUpdateSchema, type ExceptionCommentInput, type ExceptionUpdateInput } from "@/types/schemas";
-import { getErrorMessage } from "@/lib/utils";
+import { getErrorMessage, cn } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { RefreshButton } from "@/components/shared/refresh-button";
@@ -44,6 +44,7 @@ function severityBadge(severity: string) {
     },
   };
   const tone = map[severity] ?? map.low;
+  if (!tone) return null;
   return (
     <Badge variant={tone.variant ?? "outline"} className={`px-2 text-[11px] ${tone.className}`}>
       {tone.label}
@@ -59,6 +60,7 @@ function statusBadge(status: string) {
     escalated: { label: "Escalated", className: "bg-primary/10 text-primary border-primary/30" },
   };
   const item = tone[status] ?? tone.open;
+  if (!item) return null;
   return (
     <Badge variant="outline" className={`px-2 text-[11px] ${item.className}`}>
       {item.label}
@@ -69,8 +71,8 @@ function statusBadge(status: string) {
 export default function ExceptionDetailPage() {
   const params = useParams<{ id: string }>();
   const id = params?.id;
-  const statusOptions = ["open", "in_review", "resolved", "escalated"] as const;
-  const severityOptions = ["critical", "high", "medium", "low"] as const;
+  const statusOptions = ["open", "in_review", "resolved", "escalated"];
+  const severityOptions = ["critical", "high", "medium", "low"];
   const { data, isLoading, isError, error, refetch, isFetching } = useExceptionDetail(id);
   const { data: comments, isLoading: commentsLoading } = useExceptionComments(id);
   const update = useUpdateException(id);
@@ -96,8 +98,17 @@ export default function ExceptionDetailPage() {
     }
   }, [data, statusForm]);
 
-  const statusValue = statusForm.watch("status") ?? "open";
-  const severityValue = statusForm.watch("severity") ?? "medium";
+  const statusValue = useWatch({ control: statusForm.control, name: "status" }) ?? "open";
+  const severityValue = useWatch({ control: statusForm.control, name: "severity" }) ?? "medium";
+
+  const createdDisplay = useMemo(
+    () => (data?.created_at ? new Date(data.created_at).toLocaleString() : "—"),
+    [data]
+  );
+  const resolvedDisplay = useMemo(
+    () => (data?.resolved_at ? new Date(data.resolved_at).toLocaleString() : "—"),
+    [data]
+  );
 
   if (isLoading) {
     return (
@@ -115,15 +126,6 @@ export default function ExceptionDetailPage() {
       </p>
     );
   }
-
-  const createdDisplay = useMemo(
-    () => (data?.created_at ? new Date(data.created_at).toLocaleString() : "—"),
-    [data]
-  );
-  const resolvedDisplay = useMemo(
-    () => (data?.resolved_at ? new Date(data.resolved_at).toLocaleString() : "—"),
-    [data]
-  );
 
   return (
     <div className="space-y-6">
@@ -144,12 +146,13 @@ export default function ExceptionDetailPage() {
               tooltip="Reload exception"
               buttonProps={{ className: "border-primary/30 bg-primary/5 text-primary" }}
             />
-            <Button asChild size="sm" variant="secondary">
-              <Link href="/exceptions">
-                <ArrowLeft className="mr-1 h-4 w-4" />
-                Back to queue
-              </Link>
-            </Button>
+            <Link
+              href="/exceptions"
+              className={cn(buttonVariants({ variant: "secondary", size: "sm" }))}
+            >
+              <ArrowLeft className="mr-1 h-4 w-4" />
+              Back to queue
+            </Link>
           </>
         }
       />
@@ -213,13 +216,20 @@ export default function ExceptionDetailPage() {
             <SelectField
               label="Status"
               value={statusValue}
-              onChange={(v) => statusForm.setValue("status", v as ExceptionUpdateInput["status"])}
+              onChange={(v) =>
+                statusForm.setValue("status", (v ?? "open") as ExceptionUpdateInput["status"])
+              }
               options={statusOptions}
             />
             <SelectField
               label="Severity"
               value={severityValue}
-              onChange={(v) => statusForm.setValue("severity", v as ExceptionUpdateInput["severity"])}
+              onChange={(v) =>
+                statusForm.setValue(
+                  "severity",
+                  (v ?? "medium") as ExceptionUpdateInput["severity"]
+                )
+              }
               options={severityOptions}
             />
             <div className="flex flex-col gap-1">
@@ -304,7 +314,7 @@ function SelectField({
 }: {
   label: string;
   value: string;
-  onChange: (v: string) => void;
+  onChange: (v: string | null) => void;
   options: string[];
 }) {
   return (

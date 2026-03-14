@@ -5,11 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { useInventory } from "@/hooks/use-inventory";
 import { useProducts } from "@/hooks/use-products";
 import { useFacilities } from "@/hooks/use-facilities";
-import { getErrorMessage } from "@/lib/utils";
+import { getErrorMessage, cn } from "@/lib/utils";
 import { ArrowLeft, Factory, Sparkles } from "lucide-react";
 import Link from "next/link";
 
@@ -73,12 +73,16 @@ export default function InventoryProductPage() {
               <Badge variant="outline" className="border-white/20 bg-white/5 text-white">Reorder</Badge>
             </div>
           </div>
-          <Button asChild size="sm" variant="secondary" className="bg-white text-slate-900 hover:bg-slate-100">
-            <Link href="/inventory">
-              <ArrowLeft className="mr-1 h-4 w-4" />
-              Back to inventory
-            </Link>
-          </Button>
+          <Link
+            href="/inventory"
+            className={cn(
+              buttonVariants({ size: "sm", variant: "secondary" }),
+              "bg-white text-slate-900 hover:bg-slate-100"
+            )}
+          >
+            <ArrowLeft className="mr-1 h-4 w-4" />
+            Back to inventory
+          </Link>
         </div>
       </div>
 

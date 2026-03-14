@@ -11,7 +11,9 @@ export const QUERY_KEYS = {
   demand: {
     forecasts: ["demand", "forecasts"] as const,
     history: (productId?: string) =>
-      (productId ? ["demand", "history", productId] : ["demand", "history"]) as const,
+      productId
+        ? (["demand", "history", productId] as const)
+        : (["demand", "history"] as const),
   },
   products: {
     all: ["products"] as const,
