@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AuthForm } from "@/components/auth/auth-form";
-import { ThemeSwitcher } from "@/components/shared/theme-switcher";
+import { AuthPageShell } from "@/components/auth/auth-page-shell";
+import { Shield } from "lucide-react";
 
 export default async function SignInPage({
   searchParams,
@@ -9,21 +10,27 @@ export default async function SignInPage({
 }) {
   const params = await searchParams;
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center bg-background px-4 py-12">
-      <div className="absolute right-4 top-4 md:right-6 md:top-6">
-        <ThemeSwitcher />
-      </div>
-      <div className="w-full max-w-md space-y-8">
-        <div className="space-y-1 text-center">
-          <h1 className="font-display text-2xl font-semibold tracking-tight">
+    <AuthPageShell>
+      <div className="space-y-8">
+        <div className="space-y-2 text-center md:text-left">
+          <h1 className="font-display text-2xl font-semibold tracking-tight md:text-3xl">
             Sign in
           </h1>
-          <p className="text-muted-foreground text-sm">
-            Use your email or a provider to continue
+          <p className="text-sm text-muted-foreground">
+            Use your email and password to continue
           </p>
         </div>
-        <AuthForm mode="sign-in" error={params.error} message={params.message} />
-        <p className="text-center text-muted-foreground text-sm">
+        <AuthForm
+          mode="sign-in"
+          error={params.error}
+          message={params.message}
+          hideCardHeader
+        />
+        <div className="flex items-center gap-2 rounded-lg border border-dashed border-border/70 bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
+          <Shield className="h-3.5 w-3.5 text-primary" />
+          <span>Secure access to your single-tenant workspace.</span>
+        </div>
+        <p className="text-center text-sm text-muted-foreground md:text-left">
           Don&apos;t have an account?{" "}
           <Link
             href="/auth/sign-up"
@@ -33,6 +40,6 @@ export default async function SignInPage({
           </Link>
         </p>
       </div>
-    </div>
+    </AuthPageShell>
   );
 }

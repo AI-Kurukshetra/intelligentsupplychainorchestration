@@ -34,10 +34,10 @@ export function AppSidebar({ userRole, collapsed, onToggle }: AppSidebarProps) {
       <aside
         className={cn(
           "hidden h-full shrink-0 flex-col border-r border-border bg-sidebar/80 backdrop-blur transition-[width] duration-200 ease-in-out lg:flex",
-          collapsed ? "w-[3.25rem]" : "w-56"
+          collapsed ? "w-[3.25rem]" : "w-56",
         )}
       >
-        <div className="flex items-center gap-3 border-b border-sidebar-border px-3 py-3">
+        <div className="flex items-center gap-3 border-b border-sidebar-border px-3 py-3 h-16">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground font-semibold shadow-sm">
             SC
           </div>
@@ -65,14 +65,10 @@ export function AppSidebar({ userRole, collapsed, onToggle }: AppSidebarProps) {
             title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             className={cn(
               "h-9 w-9 shrink-0 text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground",
-              collapsed && "w-full"
+              collapsed && "w-full",
             )}
           >
-            {collapsed ? (
-              <PanelLeft className="h-4 w-4" />
-            ) : (
-              <PanelLeftClose className="h-4 w-4" />
-            )}
+            {collapsed ? <PanelLeft className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
           </Button>
         </div>
       </aside>
@@ -139,9 +135,7 @@ function NavList({ groupedItems, footerItems, collapsed, pathname, onNavigate }:
               )}
               {items.map((item) => {
                 const Icon = item.icon;
-                const isActive =
-                  pathname === item.href ||
-                  (item.href !== "/" && pathname.startsWith(item.href));
+                const isActive = pathname === item.href;
                 return (
                   <Link
                     key={item.href + item.label}
@@ -152,8 +146,8 @@ function NavList({ groupedItems, footerItems, collapsed, pathname, onNavigate }:
                       "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                       collapsed && "justify-center px-2",
                       isActive
-                        ? "bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-sidebar-ring/50"
-                        : "text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground"
+                        ? "bg-sidebar-primary text-sidebar-primary-foreground ring-1 ring-sidebar-ring/50"
+                        : "text-sidebar-foreground hover:bg-sidebar-primary/60 hover:text-sidebar-primary-foreground",
                     )}
                     onClick={onNavigate}
                   >
@@ -182,7 +176,7 @@ function NavList({ groupedItems, footerItems, collapsed, pathname, onNavigate }:
                   collapsed && "justify-center px-2",
                   isActive
                     ? "bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-sidebar-ring/50"
-                    : "text-sidebar-foreground hover:bg-sidebar-accent/60"
+                    : "text-sidebar-foreground hover:bg-sidebar-accent/60",
                 )}
                 onClick={onNavigate}
               >

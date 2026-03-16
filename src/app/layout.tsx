@@ -23,8 +23,8 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Next.js + Supabase Starter",
-  description: "Production-ready Next.js app with Supabase auth and database, role-based access.",
+  title: "Supply Chain Control",
+  description: "Supply Chain Control is a platform for managing supply chain operations.",
 };
 
 export default function RootLayout({
