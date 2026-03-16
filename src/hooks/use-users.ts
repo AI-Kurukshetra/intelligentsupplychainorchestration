@@ -3,7 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiGet, apiPatch, apiPost } from "@/lib/api/client";
 import { QUERY_KEYS } from "@/constants/query-keys";
-import type { PaginatedResponse, UserListItem } from "@/types/api";
+import type { UserListItem } from "@/types/api";
 import type { CreateUserValues } from "@/types/schemas";
 
 export type UseUsersParams = {
@@ -11,6 +11,10 @@ export type UseUsersParams = {
   limit?: number;
 };
 
+/**
+ * Returns list of users. apiGet unwraps the success payload, so the API's
+ * { success, data: UserListItem[], metadata } becomes just UserListItem[] here.
+ */
 export function useUsers(params: UseUsersParams = {}) {
   const page = params.page ?? 1;
   const limit = params.limit ?? 20;
@@ -21,10 +25,7 @@ export function useUsers(params: UseUsersParams = {}) {
       const search = new URLSearchParams();
       search.set("page", String(page));
       search.set("limit", String(limit));
-      const data = await apiGet<PaginatedResponse<UserListItem>>(
-        `/admin/users?${search.toString()}`
-      );
-      return data;
+      return apiGet<UserListItem[]>(`/admin/users?${search.toString()}`);
     },
   });
 }

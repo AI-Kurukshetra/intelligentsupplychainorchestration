@@ -11,7 +11,7 @@ import { PageHero } from "@/components/shared/page-hero";
 
 export default function AdminUsersPage() {
   const { data, isLoading, isError, error } = useUsers();
-  const users = data?.data ?? [];
+  const users = data ?? [];
   const total = users.length;
   const admins = users.filter((u) => u.role === "admin").length;
   const planners = users.filter((u) => u.role === "supply_planner" || u.role === "demand_planner").length;

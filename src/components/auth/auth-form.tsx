@@ -4,15 +4,10 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -22,23 +17,23 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useAuth } from "@/hooks/use-auth";
-import {
-  signInSchema,
-  signUpSchema,
-  type SignInValues,
-  type SignUpValues,
-} from "@/types/schemas";
+import { cn } from "@/lib/utils";
+import { signInSchema, signUpSchema, type SignInValues, type SignUpValues } from "@/types/schemas";
+import { AlertCircle } from "lucide-react";
 
 type AuthFormProps = {
   mode: "sign-in" | "sign-up";
   error?: string;
   message?: string;
+  /** When true, card has no title/description (page provides the heading). */
+  hideCardHeader?: boolean;
 };
 
 export function AuthForm({
   mode,
   error: initialError,
   message,
+  hideCardHeader = false,
 }: AuthFormProps) {
   const { signIn, signUp } = useAuth();
   const [submitError, setSubmitError] = useState<string | null>(initialError ?? null);
@@ -80,18 +75,20 @@ export function AuthForm({
   const isSubmitting = form.formState.isSubmitting;
 
   return (
-    <Card className="w-full border-border shadow-sm">
-      <CardHeader className="space-y-2 pb-2">
-        <CardTitle className="text-xl tracking-tight">
-          {isSignIn ? "Sign in" : "Create account"}
-        </CardTitle>
-        <CardDescription className="text-muted-foreground text-sm">
-          {isSignIn
-            ? "Enter your email and password to continue."
-            : "Enter your details below to get started."}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6 pt-2">
+    <Card className="w-full overflow-hidden rounded-lg border-border/80 shadow-md shadow-black/5 transition-shadow dark:shadow-black/20">
+      {!hideCardHeader && (
+        <CardHeader className="space-y-1.5 pb-4 pt-6">
+          <CardTitle className="text-xl font-semibold tracking-tight">
+            {isSignIn ? "Sign in" : "Create account"}
+          </CardTitle>
+          <CardDescription className="text-sm text-muted-foreground">
+            {isSignIn
+              ? "Enter your email and password to continue."
+              : "Enter your details below to get started."}
+          </CardDescription>
+        </CardHeader>
+      )}
+      <CardContent className={cn("space-y-5 pb-8", hideCardHeader ? "pt-6" : "pt-0")}>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             {mode === "sign-up" && (
@@ -107,7 +104,7 @@ export function AuthForm({
                         id="displayName"
                         type="text"
                         placeholder="Jane Doe"
-                        className="h-11 rounded-lg"
+                        className="h-11 rounded-lg border-border/80 bg-background transition-colors focus-visible:ring-2"
                       />
                     </FormControl>
                     <FormMessage />
@@ -128,7 +125,7 @@ export function AuthForm({
                       id="email"
                       type="email"
                       placeholder="you@example.com"
-                      className="h-11 rounded-lg"
+                      className="h-11 rounded-lg border-border/80 bg-background transition-colors focus-visible:ring-2"
                     />
                   </FormControl>
                   <FormMessage />
@@ -148,7 +145,7 @@ export function AuthForm({
                       id="password"
                       type="password"
                       placeholder="••••••••"
-                      className="h-11 rounded-lg"
+                      className="h-11 rounded-lg border-border/80 bg-background transition-colors focus-visible:ring-2"
                     />
                   </FormControl>
                   <FormMessage />
@@ -157,14 +154,15 @@ export function AuthForm({
             />
 
             {submitError && (
-              <p className="text-sm text-destructive" role="status">
-                {submitError}
-              </p>
+              <Alert variant="destructive" className="rounded-lg">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription role="status">{submitError}</AlertDescription>
+              </Alert>
             )}
 
             <Button
               type="submit"
-              className="h-11 w-full rounded-lg"
+              className="h-11 w-full rounded-lg font-medium"
               loading={isSubmitting}
               loadingText={isSignIn ? "Signing in..." : "Signing up..."}
             >
